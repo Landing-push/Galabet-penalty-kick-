@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galabet - Penalty Shootout Bonanza</title>
+    <meta name="description" content="Galabet Penalty Shootout Theme">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Poppins:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a2e;
+            overflow-x: hidden;
+        }
+
+        /* Stadium Grass Pattern */
+        @keyframes grassStripes {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 100px 0;
+            }
+        }
+
+        /* Football Animation */
+        @keyframes shootBall {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translate(200px, -150px) scale(0.7) rotate(360deg);
+            }
+
+            100% {
+                transform: translate(400px, -50px) scale(0.5) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes goalNetShake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-3px);
+            }
+
+            75% {
+                transform: translateX(3px);
+            }
+        }
+
+        @keyframes stadiumLights {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(157, 194, 90, 0.3), 0 0 40px rgba(157, 194, 90, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(157, 194, 90, 0.6), 0 0 80px rgba(157, 194, 90, 0.4);
+            }
+        }
+
+        @keyframes scoreboardBlink {
+
+            0%,
+            100% {
+                color: #9dc25a;
+                text-shadow: 0 0 20px rgba(157, 194, 90, 0.8);
+            }
+
+            50% {
+                color: #ffffff;
+                text-shadow: 0 0 30px rgba(255, 255, 255, 1);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Header with Stadium Background */
+        .header-section {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(180deg, rgba(26, 26, 46, 0.95) 0%, rgba(15, 15, 30, 0.98) 100%),
+                repeating-linear-gradient(90deg,
+                    #1a4d1a 0px,
+                    #1a4d1a 50px,
+                    #164016 50px,
+                    #164016 100px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* Stadium Lights */
+        .stadium-lights {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .stadium-light {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(157, 194, 90, 0.9) 0%, rgba(157, 194, 90, 0) 70%);
+            border-radius: 50%;
+            animation: stadiumLights 2s ease-in-out infinite;
+        }
+
+        /* Goal Net Pattern */
+        .goal-net {
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 450px;
+            height: 200px;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(157, 194, 90, 0.15) 19px, rgba(157, 194, 90, 0.15) 20px),
+                repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(157, 194, 90, 0.15) 19px, rgba(157, 194, 90, 0.15) 20px);
+            border: 3px solid rgba(157, 194, 90, 0.3);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Football Animation */
+        .football {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #e0e0e0);
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5),
+                inset -5px -5px 10px rgba(0, 0, 0, 0.2);
+            animation: shootBall 3s ease-out infinite;
+        }
+
+        .football::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #9dc25a;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Logo */
+        .logo-header {
+            max-width: 220px;
+            position: absolute;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            filter: drop-shadow(0 0 20px rgba(157, 194, 90, 0.6));
+        }
+
+        /* Scoreboard Title */
+        .scoreboard-title {
+            font-family: 'Teko', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: #9dc25a;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 300px;
+            /* Push below the absolute logo/net area */
+            margin-bottom: 20px;
+            z-index: 10;
+            position: relative;
+            font-weight: 700;
+            animation: scoreboardBlink 2s ease-in-out infinite;
+            text-shadow: 0 0 20px rgba(157, 194, 90, 0.8),
+                0 0 40px rgba(157, 194, 90, 0.4),
+                2px 2px 0px rgba(0, 0, 0, 0.8);
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                2px 2px 0px rgba(0, 0, 0, 0.8);
+            margin-bottom: 10px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .bonus-text {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: #ffffff;
+            line-height: 1.6;
+            z-index: 10;
+            position: relative;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .plus-icon {
+            color: #9dc25a;
+            font-weight: 900;
+            font-size: 3rem;
+            display: inline-block;
+            animation: bounce 1s infinite;
+            z-index: 10;
+            position: relative;
+            text-shadow: 0 0 20px rgba(157, 194, 90, 0.6);
+        }
+
+        /* Goal Buttons */
+        .btn-goal {
+            background: linear-gradient(135deg, #9dc25a 0%, #7da647 100%);
+            border: 3px solid #ffffff;
+            color: #1a1a2e;
+            font-weight: 900;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 20px rgba(157, 194, 90, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            font-family: 'Teko', sans-serif;
+        }
+
+        .btn-goal:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(157, 194, 90, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            background: linear-gradient(135deg, #9dc25a 0%, #8dc858 100%);
+            color: #000;
+        }
+
+        .btn-goal::before {
+            content: 'GOAL!';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: top 0.3s ease;
+            font-weight: 900;
+            color: #000;
+        }
+
+        .btn-goal:hover::before {
+            top: 0;
+        }
+
+        /* Steps Section with Field Lines */
+        .steps-section {
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%);
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .steps-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 2px;
+            background: rgba(157, 194, 90, 0.3);
+        }
+
+        .steps-section::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            border: 2px solid rgba(157, 194, 90, 0.2);
+            border-radius: 50%;
+        }
+
+        .steps-section h2 {
+            font-family: 'Teko', sans-serif;
+            color: #9dc25a;
+            text-shadow: 0 0 20px rgba(157, 194, 90, 0.5),
+                2px 2px 0px rgba(0, 0, 0, 0.8);
+            margin-bottom: 60px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+        }
+
+        .step-item {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(15, 15, 30, 0.8) 100%);
+            border: 3px solid #9dc25a;
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin-bottom: 40px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(157, 194, 90, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(157, 194, 90, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: goalNetShake 0.3s ease-in-out;
+        }
+
+        .step-item h3 {
+            font-family: 'Teko', sans-serif;
+            font-size: 2rem;
+            color: #9dc25a;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(157, 194, 90, 0.5);
+        }
+
+        .step-item p {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Football Arrow */
+        .football-arrow {
+            width: 60px;
+            height: 60px;
+            margin: 30px auto;
+            position: relative;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .football-arrow::before {
+            content: '⚽';
+            font-size: 60px;
+            position: absolute;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
+        }
+
+        /* Match Cards */
+        .bonus-section {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #000000 100%);
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .bonus-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(90deg, transparent 0px, transparent 99px, rgba(157, 194, 90, 0.02) 99px, rgba(157, 194, 90, 0.02) 100px);
+            pointer-events: none;
+        }
+
+        .bonus-section h2 {
+            font-family: 'Teko', sans-serif;
+            color: #9dc25a;
+            text-shadow: 0 0 20px rgba(157, 194, 90, 0.5),
+                2px 2px 0px rgba(0, 0, 0, 0.8);
+            margin-bottom: 60px;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+        }
+
+        .match-card {
+            background: linear-gradient(135deg, #1a1a33 0%, #1a1a2e 50%, #0f0f1e 100%);
+            border: 4px solid #9dc25a;
+            border-radius: 20px;
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 40px rgba(157, 194, 90, 0.4),
+                inset 0 0 60px rgba(157, 194, 90, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .match-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(157, 194, 90, 0.6),
+                inset 0 0 80px rgba(157, 194, 90, 0.2);
+        }
+
+        .match-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(157, 194, 90, 0.05) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .match-ribbon {
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: linear-gradient(135deg, #df2da0 0%, #c02590 100%);
+            color: white;
+            padding: 8px 45px;
+            transform: rotate(45deg);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(223, 45, 160, 0.6);
+            z-index: 5;
+            font-family: 'Teko', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .match-ribbon.green {
+            background: linear-gradient(135deg, #9dc25a 0%, #7da647 100%);
+            color: #000;
+        }
+
+        .match-title {
+            font-size: 1.4rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .match-amount {
+            font-family: 'Teko', sans-serif;
+            font-size: 4rem;
+            color: #9dc25a;
+            text-shadow: 0 0 30px rgba(157, 194, 90, 0.8),
+                2px 2px 0px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            font-weight: 700;
+        }
+
+        .match-description {
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Footer */
+        .footer-section {
+            background: #000000;
+            border-top: 3px solid #9dc25a;
+            padding: 40px 0 20px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .logo-footer-brand {
+            width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(157, 194, 90, 0.3));
+        }
+
+        .logo-footer {
+            width: 60px;
+            margin: 10px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .logo-footer:hover {
+            opacity: 1;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .scoreboard-title {
+                font-size: 2.5rem;
+                margin-top: 230px;
+
+            }
+
+            .match-amount {
+                font-size: 3rem;
+            }
+
+            .btn-goal {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+
+            .step-item {
+                padding: 30px 20px;
+            }
+
+            .goal-net {
+                width: 70%;
+                height: 150px;
+                top: 120px;
+            }
+
+            .logo-header {
+                max-width: 150px;
+                top: 175px;
+            }
+
+            .plus-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header class="header-section">
+        <!-- Stadium Lights -->
+        <div class="stadium-lights">
+            <div class="stadium-light" style="animation-delay: 0s;"></div>
+            <div class="stadium-light" style="animation-delay: 0.3s;"></div>
+            <div class="stadium-light" style="animation-delay: 0.6s;"></div>
+            <div class="stadium-light" style="animation-delay: 0.9s;"></div>
+        </div>
+
+        <!-- Goal Net -->
+        <div class="goal-net"></div>
+
+        <!-- Flying Footballs -->
+        <div class="football" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="football" style="left: 30%; animation-delay: 1s;"></div>
+        <div class="football" style="left: 70%; animation-delay: 2s;"></div>
+
+        <img src="galabetlogo.svg" alt="Galabet Logo" class="logo-header">
+
+        <h1 class="scoreboard-title text-center">%150 HOŞGELDIN BONUSU</h1>
+
+        <p class="plus-icon">+</p>
+
+        <p class="subtitle text-center">200 Free Spin, 200₺ Bedava Bahis<br>ya da 200₺ Aviator Bonusu</p>
+
+        <p class="bonus-text text-center mb-4">
+            Casino & Bahis<br>
+            Penaltını At, Bonusunu Kap!<br>
+            HER VURUŞ BİR GOL, HER GOL BİR KAZANÇ!
+        </p>
+
+        <div class="mt-4">
+            <a href="#" class="btn btn-goal mx-2 mb-3">HESAP AÇ</a>
+            <a href="#" class="btn btn-goal mx-2 mb-3">ANASAYFA</a>
+        </div>
+    </header>
+
+    <!-- Steps Section -->
+    <section class="steps-section">
+        <div class="container">
+            <h2 class="text-center">SAHAYA GİR, CASİNO'NUN KAZANDIRAN TAHTINA OTUR!</h2>
+
+            <div class="football-arrow"></div>
+
+            <div class="step-item">
+                <h3>1 – SAHAYA GİR, HESAP AÇ</h3>
+                <p>Türkiye'nin en heyecanlı Penalty temalı bahis sitesine hoş geldin! Kazananların tahtına oturmak için
+                    hemen sahaya gir ve hesap aç!</p>
+                <a href="#" class="btn btn-goal">HESAP AÇ</a>
+            </div>
+
+            <div class="football-arrow"></div>
+
+            <div class="step-item">
+                <h3>2 – 200 TL DENEME BONUSU AL</h3>
+                <p>200 TL Deneme Bonusunu anında al ve Galabet Penalty dünyasını keşfetmeye başla. Her vuruş bir şans,
+                    her gol bir kazanç!</p>
+                <a href="#" class="btn btn-goal">BONUSUMU AL</a>
+            </div>
+
+            <div class="football-arrow"></div>
+
+            <div class="step-item">
+                <h3>3 – PENALTINI AT, BONUSUNU KAP</h3>
+                <p>200 Free Spin, 200₺ Bedava Bahis ya da 200₺ Aviator Bonusu! Seçimini yap, penaltını at ve büyük
+                    kazançları yakalamaya başla!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bonus Section -->
+    <section class="bonus-section">
+        <div class="container">
+            <h2 class="text-center">PENALTINI AT, BONUSUNU KAP! HANGİ KALEYE VURACAKSIN?</h2>
+
+            <div class="row justify-content-center">
+                <!-- Casino Card -->
+                <div class="col-lg-5 col-md-6 mb-4">
+                    <div class="match-card">
+                        <div class="match-ribbon">CASINO</div>
+                        <h3 class="match-title">%150 HOŞGELDİN BONUSU</h3>
+                        <p class="match-amount">20.000₺</p>
+                        <p class="match-description">
+                            Penaltını Casino kalesine at! <strong>20.000₺</strong> bonus ile kazanmaya başla. Topun
+                            ağlara gitmesi kadar kazancın da yükselsin! Galabet ile her vuruş bir gol!
+                        </p>
+                        <a href="#" class="btn btn-goal w-100">KAMPANYAYA KATIL</a>
+                    </div>
+                </div>
+
+                <!-- Sports Card -->
+                <div class="col-lg-5 col-md-6 mb-4">
+                    <div class="match-card">
+                        <div class="match-ribbon green">SPOR</div>
+                        <h3 class="match-title">%150 HOŞGELDİN BONUSU</h3>
+                        <p class="match-amount">17.500₺</p>
+                        <p class="match-description">
+                            Penaltını Spor kalesine vur! <strong>5000₺</strong>'ye kadar Hoşgeldin Bonusu + <strong>200₺
+                                Bedava Bahis!</strong> Favori takımını seç, bahisini yap, kazancını katla. Her maç bir
+                            şans!
+                        </p>
+                        <a href="#" class="btn btn-goal w-100">KAMPANYAYA KATIL</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <div class="container">
+            <img src="galabetlogo.svg" alt="Logo" class="logo-footer-brand">
+            <p class="mt-3">© Galabet 2025, Şans oyunları bağımlılık yapabilir, lütfen bilinçli oynayınız.</p>
+
+            <div class="row justify-content-center my-4">
+                <div class="col-md-6 text-center">
+                    <img src="dmca.webp" alt="DMCA" class="logo-footer">
+                    <img src="gcb.webp" alt="GCB" class="logo-footer">
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-12">
+                    <p class="footer-text">
+                        <strong>ANJOUAN GAMING LICENSE</strong><br>
+                        Bu site, Curaçao Ticaret ve Sanayi Odası Ticaret Siciline, tescil edilen kayıt numarası ile Hit
+                        Entertainment B.V tarafından işletilmektedir. Lisans numarası 8048 / JAZ Curaçao Egaming
+                        tarafından verilmiştir. Curaçao Hükümeti tarafından yetkilendirilir ve düzenlenir. Bu web
+                        sitesine kaydolabilmek için kullanıcıların kabul etmeleri gerekmektedir. Genel Şartlar ve
+                        Koşullarda bir güncelleme olduğunda, bu güncelleme yürürlüğe girmeden en az iki hafta öncesinde
+                        kullanıcılara bildirilecektir. Mevcut kullanıcılar, bu güncellemenin yürürlüğe girmesinden önce,
+                        istedikleri takdirde ürün ve hizmetlerimizi kullanmayı durdurma hakkına sahiptirler.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
